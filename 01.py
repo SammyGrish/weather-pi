@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import time
 import os
+import request
 from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import ssd1306
@@ -11,7 +12,7 @@ import bme280
 def do_nothing(obj):
     pass
 
-
+API_URL = 'http://grisham.shelms.io/api/'
 # define our i2c LED location
 serial = i2c(port=1, address=0x3C)
 # We have an ssd1306 device so we initialize it at the
@@ -41,10 +42,8 @@ def main():
 while True:
     main()
     time.sleep (5)
-
-import requests
-
-# use a global variable for your URL so you can change it ne place and it affects the entire script
-API_URL = 'http://grisham.shelms.io/api/'
-r = requests.post(API_URL, data.temperature)
-print(r.text)
+    API_URL = 'http://grisham.shelms.io/api/'
+    T = requests.post(API_URL+'T/', data.temperature)
+    H = request.post(API_URL+'H/',data.humidity)
+    P = request.post(API_URL+'P/',data.pressure)
+    print(T.text + H.text + P.text)
