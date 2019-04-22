@@ -42,6 +42,9 @@ def main():
 while True:
     main()
     time.sleep (5)
+    report()
+
+def report():
     API_URL = 'http://grisham.shelms.io/api/'
     T = requests.post(API_URL+'T/', data.temperature)
     H = request.post(API_URL+'H/',data.humidity)
