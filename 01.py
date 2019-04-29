@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
 import os
-import request
+import requests
 from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import ssd1306
@@ -37,16 +37,20 @@ def main():
         draw.text((5,10), "Temp:%3.2f \u00b0F"%(data.temperature*(9/5)+32), fill="white")
         draw.text((5,20), "Humidity:%3.2f "%(data.humidity), fill="white")
         draw.text((5,30), "pressure:%3.2f"%(data.pressure), fill="white")
-        draw.text((5,40), "time stamp:"+str(data.timeStamp), fill="white")
+        draw.text((5,40), "time stamp:"+str(data.timestamp), fill="white")
+
+def report():
+    data = bme280.sample(bus, address, calibration_params)
+    API_URL = 'http://grisham.shelms.io/api/'
+    T = requests.post(API_URL+'T',
+	data={'celesius': data.temperature})
+    H = requests.post(API_URL+'H',
+	data={'RH':data.humidity})
+    P = requests.post(API_URL+'P',
+	data={'BP':data.pressure})
+    print(T.text + H.text + P.text)
 
 while True:
     main()
     time.sleep (5)
     report()
-
-def report():
-    API_URL = 'http://grisham.shelms.io/api/'
-    T = requests.post(API_URL+'T/', data.temperature)
-    H = request.post(API_URL+'H/',data.humidity)
-    P = request.post(API_URL+'P/',data.pressure)
-    print(T.text + H.text + P.text)
